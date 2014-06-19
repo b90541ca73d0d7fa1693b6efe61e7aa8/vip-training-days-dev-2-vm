@@ -3,7 +3,6 @@
 var wp = require( './wp' );
 
 var victimPage = wp.page( 'VICTIM' );
-var maliciousPage = wp.page( 'MALICIOUS' );
 
 var success = false;
 
@@ -35,20 +34,7 @@ function clearPoll( page ) {
 	};
 };
 
-maliciousPage.onLoadFinished = clearPoll( maliciousPage );
 victimPage.onLoadFinished = clearPoll( victimPage );
 
-console.log( "Malicious: loading homepage" );
-maliciousPage.open( wp.url, function() {
-	console.log( "Malicious: injecting attacks/2-xss.js" );
-	maliciousPage.evaluate( function( url ) {
-		jQuery.getScript( url + 'attacks/2-xss.js' );
-	}, wp.url );
-
-	setTimeout( function() {
-		phantom.clearCookies();
-
-		console.log( "Victim: loading homepage" );
-		victimPage.open( wp.url );
-	}, 3000 );
-} );
+console.log( "Victim: loading homepage" );
+victimPage.open( wp.url );
