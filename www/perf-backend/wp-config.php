@@ -35,7 +35,7 @@ define('WP_SITEURL', WP_HOME . '/wordpress' );
 define('WP_CONTENT_DIR', __DIR__ . '/wp-content');
 define('WP_CONTENT_URL', WP_HOME . '/wp-content');
 
-require( __DIR__ . '/config/batcache-config.php' );
+// require( __DIR__ . '/config/batcache-config.php' );
 
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
