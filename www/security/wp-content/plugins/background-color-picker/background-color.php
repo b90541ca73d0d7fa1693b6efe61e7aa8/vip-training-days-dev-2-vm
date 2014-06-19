@@ -95,8 +95,7 @@ class VIP_Background_Color_Picker {
 			$on_duplicate = '';
 			$ignore = 'IGNORE';
 		}
-
-		return $wpdb->query( $wpdb->prepare( "INSERT $ignore INTO `{$wpdb->prefix}recent_colors` ( `value`, `reason` ) VALUES ( '$value', '$reason' ) $on_duplicate" ) );
+		return $wpdb->query( $wpdb->prepare( "INSERT $ignore INTO `{$wpdb->prefix}recent_colors` ( `value`, `reason` ) VALUES ( '%s', '%s' ) $on_duplicate", $value, $reason ) );
 	}
 
 	function delete_recent_colors() {
