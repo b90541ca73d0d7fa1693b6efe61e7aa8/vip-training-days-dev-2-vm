@@ -35,7 +35,7 @@ function test_one() {
 	console.log( 'Test 1...' );
 	page.onLoadFinished = function() {
 		page.onLoadFinished = function() {};
-	
+
 		page.open( wp.url, function() {
 			var cookie = page.evaluate( function() {
 				return document.cookie;
