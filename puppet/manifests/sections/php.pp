@@ -1,4 +1,4 @@
-$php_version = '5.4.34-1+deb.sury.org~precise+1'
+$php_version = '5.4.38-1+deb.sury.org~precise+2'
 
 include php
 include apt
