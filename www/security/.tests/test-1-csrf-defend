@@ -69,7 +69,7 @@ function test_two() {
 
 			if ( 'color=%23deface' === cookie ) {
 				console.log( 'Tricky CSRF Exploit Still Vulnerable' );
-				phantom.exit( 1 );
+				phantom.exit( 202 );
 			} else {
 				console.log( 'Nice! You fixed the Tricky CSRF Vulnerability :)' );
 				phantom.exit();
