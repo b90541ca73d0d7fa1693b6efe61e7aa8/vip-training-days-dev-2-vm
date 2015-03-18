@@ -6,6 +6,7 @@ var page = wp.page();
 
 var next;
 var error;
+var failureCode = 1;
 
 page.onLoadFinished = function() {
 	var width = page.evaluate( function() {
@@ -14,7 +15,7 @@ page.onLoadFinished = function() {
 
 	if ( width > 20 ) {
 		console.log( error );
-		phantom.exit( 1 );
+		phantom.exit( failureCode );
 	} else if ( ! next ) {
 		console.log( 'Logic Error Vulnerabilities Successfully Closed!' );
 		phantom.exit();
@@ -39,6 +40,7 @@ function test2() {
 	console.log( 'Test 2...' );
 
 	error = 'Hash Vulnerability Still Exploitable.';
+	failureCode = 202;
 	next = test3;
 
 	page.setContent(
@@ -83,7 +85,7 @@ function test3() {
 
 				if ( is_black( colors[0] ) && is_black( colors[1] ) ) {
 					console.log( 'Minor Logic Error Still Exists.' );
-					phantom.exit( 1 );
+					phantom.exit( failureCode );
 				} else {
 					console.log( 'All Logic Errors Fixed!' );
 					phantom.exit();
