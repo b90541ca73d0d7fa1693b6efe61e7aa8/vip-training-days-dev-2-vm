@@ -56,7 +56,8 @@ for COMMENT in $COMMENTS
 do
 	set +e
 		wp comment approve "$COMMENT" &> /dev/null
-		NEXT_POST=$( wp comment-meta get "$COMMENT" _next_post 2> /dev/null )
+		NEXT_POST_SLUG=$( wp comment-meta get "$COMMENT" _next_post 2> /dev/null )
+		NEXT_POST=$( wp post list --name="$NEXT_POST_SLUG" --field=ID )
 	set -e
 	if [ -n "$NEXT_POST" ]
 	then
