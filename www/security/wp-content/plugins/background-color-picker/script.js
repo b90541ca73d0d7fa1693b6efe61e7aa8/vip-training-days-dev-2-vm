@@ -4,12 +4,23 @@ function set_color_cookie( value ) {
 
 function new_recent_color( value, reason, hash ) {
 	var $new_color;
+	var $recentColors = jQuery( '.recent-colors' );
+	var $already = $recentColors.find( 'img[data-value="' + value + '"]' );
+
+	if ( $already.size() ) {
+		if ( ~ $already.attr( 'src' ).indexOf( encodeURIComponent( reason ) ) ) {
+			return;
+		} else {
+			$already.parents( 'li:first' ).remove();
+		}
+	}
+
 	$new_color = jQuery( '<a href="#"><img src="' + VIP_Color_Picker.color_url
 		+ '&amp;value=' + encodeURIComponent( value )
 		+ '&amp;reason=' + encodeURIComponent( reason )
 		+ '&amp;hash=' + encodeURIComponent( hash )
 		+ '" data-value="' + value + '" /></a>' );
-	jQuery( '.recent-colors' ).prepend( '<li>' ).find( 'li:first' ).append( $new_color );
+	$recentColors.prepend( '<li>' ).find( 'li:first' ).append( $new_color );
 }
 
 function list_recent_colors() {
@@ -37,8 +48,6 @@ function show_recent_colors( data ) {
 		var color = jQuery( this );
 		colors.push( [ color.find( 'value' ).text(), color.find( 'reason' ).text(), color.find( 'hash' ).text() ] );
 	} );
-
-	jQuery( '.recent-colors' ).empty();
 
 	jQuery.each( colors.reverse(), function() {
 		new_recent_color( this[0], this[1], this[2] );
