@@ -2,31 +2,43 @@ function set_color_cookie( value ) {
 	document.cookie = 'color=' + escape( value ) + ';path=' + escape( VIP_Color_Picker.cookie_path );
 }
 
+// Returns jQuery list of LI elements matching the given color
+function color_in_recent_colors_list( value, reason, hash ) {
+	return jQuery( '.recent-colors' ).find( 'li' ).filter( function( i, item ) {
+		var src = jQuery( item ).find( 'img' ).attr( 'src' );
+		if (
+			src.match( 'value=' + encodeURIComponent( value ) + '&' )
+		&&
+			src.match( 'reason=' + encodeURIComponent( reason ) + '&' )
+		&&
+			src.match( 'hash=' + encodeURIComponent( hash ) )
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	} );
+}
+
+// Adds new LI element to Recent Colors list
 function new_recent_color( value, reason, hash ) {
 	var $new_color;
-	var $recentColors = jQuery( '.recent-colors' );
-	var $already = $recentColors.find( 'img[data-value="' + value + '"]' );
-
-	if ( $already.size() ) {
-		if ( ~ $already.attr( 'src' ).indexOf( encodeURIComponent( reason ) ) ) {
-			return;
-		} else {
-			$already.parents( 'li:first' ).remove();
-		}
-	}
 
 	$new_color = jQuery( '<a href="#"><img src="' + VIP_Color_Picker.color_url
 		+ '&amp;value=' + encodeURIComponent( value )
 		+ '&amp;reason=' + encodeURIComponent( reason )
 		+ '&amp;hash=' + encodeURIComponent( hash )
 		+ '" data-value="' + value + '" /></a>' );
-	$recentColors.prepend( '<li>' ).find( 'li:first' ).append( $new_color );
+
+	jQuery( '.recent-colors' ).prepend( '<li>' ).find( 'li:first' ).append( $new_color );
 }
 
+// Attached to setInterval
 function list_recent_colors() {
 	get_recent_colors( show_recent_colors );
 }
 
+// Polls for new colors
 function get_recent_colors( callback ) {
 	var url = VIP_Color_Picker.ajax_url + document.location.search;
 	if ( -1 === url.indexOf( '?' ) ) {
@@ -42,21 +54,39 @@ function get_recent_colors( callback ) {
 		.done( callback );
 }
 
+// Modifies Recent Colors list given XML document of current colors
 function show_recent_colors( data ) {
-	var colors = [];
+	var addColors = [];
+	var keepLis = [];
+
 	jQuery( data ).find( 'color' ).each( function() {
-		var color = jQuery( this );
-		colors.push( [ color.find( 'value' ).text(), color.find( 'reason' ).text(), color.find( 'hash' ).text() ] );
+		var $color = jQuery( this );
+
+		var value = $color.find( 'value' ).text();
+		var reason = $color.find( 'reason' ).text();
+		var hash = $color.find( 'hash' ).text();
+
+		var $already = color_in_recent_colors_list( value, reason, hash );
+
+		if ( $already.size() ) {
+			keepLis.push( $already.get( 0 ) );
+		} else {
+			addColors.push( [ value, reason, hash ] );
+		}
 	} );
 
-	jQuery.each( colors.reverse(), function() {
+	jQuery( '.recent-colors li' ).not( keepLis ).remove();
+
+	jQuery.each( addColors, function() {
 		new_recent_color( this[0], this[1], this[2] );
 	} );
 }
 
-// Unfortunately, our robots in this workshop are not very smart
+// !!!
+// Unfortunately, our robots in this workshop are not very smart.
 // You cannot change the signature of this function.  That is, this
 // function must always accept only three arguments: value, reason, callback
+// !!!
 function save_color( value, reason, callback ) {
 	var jqXHR = jQuery.ajax( {
 		type: "POST",
@@ -70,6 +100,7 @@ function save_color( value, reason, callback ) {
 	}
 }
 
+// Returns appropriate text color for use on given background color
 // http://24ways.org/2010/calculating-color-contrast/
 function get_contrast_YIQ( hex ) {
 	var r = parseInt( hex.substr( 1, 2 ), 16 );
