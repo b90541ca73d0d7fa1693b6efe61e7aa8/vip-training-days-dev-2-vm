@@ -37,4 +37,4 @@ do {
 } while ( false );
 
 echo "The Trickier XSS Vulnerability is Still Exploitable in Some Browsers\n";
-exit( 1 );
+exit( 202 );
