@@ -10,6 +10,9 @@ able:
 db:
 	-@read -p 'Create `security` Database and Import `evil_*` Data? [y/N]: '; case "$$REPLY" in [yY]*) make unsafeimport ;; *) echo Aborted; exit 1 ;; esac
 
+linkedlist:
+	.db/linkedlist.sh 0-open-redirect 1-csrf 2-xss 8-sql-injection 13-logic-errors 11-os-injection 7-clickjacking 3-xss-js 4-xss-css 5-csrf-again 9-create-function 10-preg-replace 12-xxe 14-md5 15-configuration 16-the-end
+
 unsafeimport: .db/db.sql
 	-wp db create
 	wp db import .db/db.sql

@@ -9,6 +9,9 @@ function vip_shortcode_highlight( $atts = array(), $content = null, $tag ) {
 	case 'url' :
 		$return = vip_url_shortcode( $atts, $content );
 		break;
+	case 'next' :
+		$return = vip_url_next_shortcode( $atts, $content );
+		break;
 	case 'attack' :
 		$return = vip_attack_shortcode( $atts, $content );
 		break;
@@ -20,6 +23,7 @@ function vip_url_shortcode_filter_text( $text ) {
 	$shortcode_tags = $GLOBALS['shortcode_tags'];
 	remove_all_shortcodes();
 	add_shortcode( 'url', 'vip_shortcode_highlight' );
+	add_shortcode( 'next', 'vip_shortcode_highlight' );
 	add_shortcode( 'attack', 'vip_shortcode_highlight' );
 
 	$text = do_shortcode( $text );
