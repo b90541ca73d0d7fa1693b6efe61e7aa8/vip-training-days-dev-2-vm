@@ -60,3 +60,16 @@ Template: twentyfourteen
 .post-navigation {
 	display: none;
 }
+
+.highlight-line {
+	display: inline-block;
+	min-width: 100%;
+}
+
+pre.no-wrap {
+	white-space: pre !important;
+	word-wrap: normal !important;
+	background-color: #f8f8f8;
+	border: 12px solid #fff;
+	outline: 1px solid rgba(0, 0, 0, 0.1);
+}

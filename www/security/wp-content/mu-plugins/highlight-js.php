@@ -1,11 +1,21 @@
 <?php
 
 function vip_highlight_js_fix_text( $text ) {
-	return preg_replace_callback( '#(<pre><code[^>]*?>)(.*?)(</code></pre>)#s', 'vip_highlight_js_fix_text_callback', $text );
+	return preg_replace_callback( '#(<pre[^>]*?><code[^>]*?>)(.*?)(</code></pre>)#s', 'vip_highlight_js_fix_text_callback', $text );
 }
 
 function vip_highlight_js_fix_text_callback( $matches ) {
-	return $matches[1] . trim( htmlspecialchars( $matches[2], ENT_QUOTES ) ) . $matches[3];
+	$content = trim( htmlspecialchars( $matches[2], ENT_QUOTES ) );
+	if ( preg_match( '/mark-(\d+)/', $matches[1], $mark ) ) {
+		$lines = preg_split( '/(\r?\n)/', $content, -1, PREG_SPLIT_DELIM_CAPTURE );
+		$line = 2 * ( intval( $mark[1] ) - 1 );
+		if ( isset( $lines[$line] ) ) {
+			$lines[$line] = '<mark class="highlight-line">' . $lines[$line] . '</mark>';
+			$content = join( '', $lines );
+		}
+	}
+
+	return $matches[1] . $content . $matches[3];
 }
 
 function vip_highlight_js() {
