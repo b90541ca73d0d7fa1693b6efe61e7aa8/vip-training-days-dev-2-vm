@@ -2,24 +2,6 @@ function set_color_cookie( value ) {
 	document.cookie = 'color=' + escape( value ) + ';path=' + escape( VIP_Color_Picker.cookie_path );
 }
 
-// Returns jQuery list of LI elements matching the given color
-function color_in_recent_colors_list( value, reason, hash ) {
-	return jQuery( '.recent-colors' ).find( 'li' ).filter( function( i, item ) {
-		var src = jQuery( item ).find( 'img' ).attr( 'src' );
-		if (
-			src.match( 'value=' + encodeURIComponent( value ) + '&' )
-		&&
-			src.match( 'reason=' + encodeURIComponent( reason ) + '&' )
-		&&
-			src.match( 'hash=' + encodeURIComponent( hash ) )
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	} );
-}
-
 // Adds new LI element to Recent Colors list
 function new_recent_color( value, reason, hash ) {
 	var $new_color;
@@ -52,6 +34,31 @@ function get_recent_colors( callback ) {
 	jQuery
 		.ajax( url )
 		.done( callback );
+}
+
+// Returns jQuery list of LI elements matching the given color
+function color_in_recent_colors_list( value, reason, hash ) {
+	return jQuery( '.recent-colors' ).find( 'li' ).filter( function( i, item ) {
+		var $img = jQuery( item ).find( 'img' );
+		var src = $img.attr( 'src' );
+		var isSameValue = false;
+
+		try {
+			isSameValue = $img.attr( 'data-value' ).match( value.match( /#[a-f0-9]{6}/i )[0] );
+		} catch ( e ) {}
+
+		if (
+			isSameValue
+		&&
+			src.match( 'reason=' + encodeURIComponent( reason ) + '&' )
+		&&
+			src.match( 'hash=' + encodeURIComponent( hash ) )
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	} );
 }
 
 // Modifies Recent Colors list given XML document of current colors
