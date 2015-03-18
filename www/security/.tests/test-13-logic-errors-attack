@@ -22,6 +22,7 @@ page.onLoadFinished = function() {
 	if ( -1 === params.src.indexOf( '&value=%23deface' ) ) {
 		console.log( 'Wrong color :(' );
 		phantom.exit( 1 );
+		return;
 	}
 
 	if ( params.width > 20 ) {
