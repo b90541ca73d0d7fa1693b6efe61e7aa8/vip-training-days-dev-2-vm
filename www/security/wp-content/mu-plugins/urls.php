@@ -75,6 +75,22 @@ function vip_url_shortcode_output( $url, $content ) {
 
 add_shortcode( 'url', 'vip_url_shortcode' );
 
+function vip_url_next_shortcode( $atts = array(), $content = null ) {
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		$runner = WP_CLI::get_runner();
+		list( $command, $args ) = $runner->find_command_to_run( $runner->arguments );
+		$comment_id = (int) $args[0];
+	} else {
+		$comment_id = (int) $GLOBALS['comment']->comment_ID;
+	}
+
+	$post = get_comment_meta( $comment_id, '_next_post', true );
+
+	return vip_url_shortcode( compact( 'post' ), $content );
+}
+
+add_shortcode( 'next', 'vip_url_next_shortcode' );
+
 add_filter( 'comment_text', 'do_shortcode', 8 );
 add_filter( 'the_content', 'make_clickable', 11 );
 
