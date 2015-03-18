@@ -37,4 +37,5 @@ do {
 } while ( false );
 
 echo "The Trickier XSS Vulnerability is Still Exploitable in Some Browsers\n";
+echo "HINT: It's not CSS or JS related\n";
 exit( 202 );
