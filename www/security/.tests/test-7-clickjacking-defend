@@ -3,11 +3,17 @@
 var wp = require( './wp' );
 var page = wp.page();
 
-var attack = '<style>iframe {opacity: 0.2;position: absolute;top: 0;left: 0;width: 800px;height: 600px;border: 0;padding: 0;margin: 0;}.bu' + 'nny, .ki' + 'tty {position: absolute;display: inline-block;background: red;}.bu' + 'nny {left: 560px;top: 285px;}.ki' + 'tty { left: 590px; top: 200px; }</style><a href="#" class="bu' + 'nny">BU' + 'NNY!</a><a href="#" class="ki' + 'tty">KI' + 'TTY!</a><iframe src="' + wp.url + '"></iframe>';
+var attack = '<style>iframe {opacity: 0.2;position: absolute;top: 0;left: 0;width: 800px;height: 600px;border: 0;padding: 0;margin: 0;z-index: 1;}.bu' + 'nny, .ki' + 'tty {position: absolute;display: inline-block;background: yellow;z-index: 0;}.bu' + 'nny {left: 560px;top: 285px;}.ki' + 'tty { left: 590px; top: 200px; }</style><a href="#" class="bu' + 'nny">BU' + 'NNY!</a><a href="#" class="ki' + 'tty">KI' + 'TTY!</a><iframe src="' + wp.url + '"></iframe>';
 
 page.viewportSize = {
 	width: 800,
-	height: 600
+	height: 800
+};
+page.clipRect = {
+	top: 0,
+	left: 0,
+	width: 800,
+	height: 800
 };
 
 function getLinkCoords( text ) {
@@ -87,6 +93,27 @@ function afterLoadIframe() {
 
 		page.sendEvent( 'click', bCoords[0], bCoords[1] );
 		page.sendEvent( 'click', kCoords[0], kCoords[1] );
+
+		page.evaluate( function( viewport, bunny, kitty ) {
+			function drawSquare( left, width, top, height ) {
+				var span = document.createElement( 'span' );
+
+				span.style.position = 'absolute';
+				span.style.display = 'block';
+				span.style.outline = '1px solid red';
+				span.style.left = left.toString() + 'px';
+				span.style.width = width.toString() + 'px';
+				span.style.top = top.toString() + 'px';
+				span.style.height = height.toString() + 'px';
+				span.style.zIndex = '10000000000000000';
+
+				document.body.appendChild( span );
+			}
+
+			drawSquare( bunny[0], 1, bunny[1], 1 );
+			drawSquare( kitty[0], 1, kitty[1], 1 );
+			drawSquare( 1, viewport.width - 2, 1, viewport.height - 2 );
+		}, page.viewportSize, bCoords, kCoords );
 
 		page.render( wp.dir + 'attacks/7-clickjacking.png' );
 

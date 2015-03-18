@@ -10,7 +10,13 @@ f.close();
 
 page.viewportSize = {
 	width: 800,
-	height: 600
+	height: 800
+};
+page.clipRect = {
+	top: 0,
+	left: 0,
+	width: 800,
+	height: 800
 };
 
 function getLinkCoords( text ) {
@@ -19,6 +25,8 @@ function getLinkCoords( text ) {
 		var link;
 		var i;
 		var bounds;
+		var left;
+		var top;
 
 		for ( i = 0; i < links.length; i++ ) {
 			if ( text === links[i].textContent ) {
@@ -33,10 +41,10 @@ function getLinkCoords( text ) {
 
 		bounds = link.getBoundingClientRect();
 
-		return [
-			parseInt( bounds.left + ( bounds.right - bounds.left ) / 2, 10 ),
-			parseInt( bounds.top + ( bounds.bottom - bounds.top ) / 2, 10 )
-		]
+		left = parseInt( bounds.left + ( bounds.right - bounds.left ) / 2, 10 );
+		top = parseInt( bounds.top + ( bounds.bottom - bounds.top ) / 2, 10 );
+
+		return [ left, top ];
 	}, text );
 }
 
@@ -54,6 +62,27 @@ page.onLoadFinished = function() {
 
 		page.sendEvent( 'click', bCoords[0], bCoords[1] );
 		page.sendEvent( 'click', kCoords[0], kCoords[1] );
+
+		page.evaluate( function( viewport, bunny, kitty ) {
+			function drawSquare( left, width, top, height ) {
+				var span = document.createElement( 'span' );
+
+				span.style.position = 'absolute';
+				span.style.display = 'block';
+				span.style.outline = '1px solid red';
+				span.style.left = left.toString() + 'px';
+				span.style.width = width.toString() + 'px';
+				span.style.top = top.toString() + 'px';
+				span.style.height = height.toString() + 'px';
+				span.style.zIndex = '10000000000000000';
+
+				document.body.appendChild( span );
+			}
+
+			drawSquare( bunny[0], 1, bunny[1], 1 );
+			drawSquare( kitty[0], 1, kitty[1], 1 );
+			drawSquare( 1, viewport.width - 2, 1, viewport.height - 2 );
+		}, page.viewportSize, bCoords, kCoords );
 
 		page.render( wp.dir + 'attacks/7-clickjacking.png' );
 
