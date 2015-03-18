@@ -45,6 +45,9 @@ function show_recent_colors( data ) {
 	} );
 }
 
+// Unfortunately, our robots in this workshop are not very smart
+// You cannot change the signature of this function.  That is, this
+// function must always accept only three arguments: value, reason, callback
 function save_color( value, reason, callback ) {
 	var jqXHR = jQuery.ajax( {
 		type: "POST",
