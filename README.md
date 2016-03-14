@@ -26,7 +26,7 @@ How to Install
 0. Install [Vagrant](http://downloads.vagrantup.com/), preferably the
    latest 1.5 version. Less than 1.1 will not work.
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
-2. Check out `https://github.com/158e6ce7b351/vip-training-days-vm
+2. Clone this repo.
 3. Run `vagrant up`.
 4. Wait :-)
 5. Map `10.86.73.82` to `vip-training-days.dev` in your hosts file or in your local
